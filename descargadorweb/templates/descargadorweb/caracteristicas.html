@@ -1,0 +1,24 @@
+{% extends 'descargadorweb/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}
+    Características
+{% endblock %}
+
+{% block main %}
+    <main role="main" class="inner cover">
+        <p class="lead pt-4">Software gratuito para realizar la descarga de facturas CFDI desde el SAT</p>
+
+        <ul class="list-unstyled">
+            <li class="">Descarga 200,000 XML por solicitud</li>
+            <li class="">Filtro por fecha hasta 1 año</li>
+            <li class="">Respaldo en la nube por 30 días</li>
+            <li class="">100% Gratuito</li>
+        </ul>
+
+        <p class="lead">
+            <a href="#" class="btn btn-lg btn-secondary">Descargar Ahora</a>
+        </p>
+    </main>
+{% endblock %}
