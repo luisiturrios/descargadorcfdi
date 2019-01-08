@@ -1,0 +1,66 @@
+{% extends 'auth2/base.html' %}
+{% load staticfiles %}
+
+{% block title %}Iniciar sesión{% endblock %}
+
+{% block content %}
+    <h3 class="h3 mb-3 font-weight-normal">Iniciar sesión</h3>
+
+    {% for error in form.non_field_errors %}
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="mr-auto">Error</strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body">
+                {{ error }}
+            </div>
+        </div>
+    {% endfor %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        <label for="id_username" class="sr-only">{{ form.username.label }}</label>
+        <input type="email"
+               name="username"
+               id="id_username"
+               class="form-control"
+               placeholder="{{ form.username.label }}"
+               value="{{ form.username.value|default:'' }}"
+               required
+               autofocus
+                >
+
+        <label for="id_password" class="sr-only">{{ form.password.label }}</label>
+        <input type="password"
+               name="password"
+               id="id_password"
+               class="form-control"
+               placeholder="{{ form.password.label }}"
+               required
+                >
+
+        <button class="btn btn-lg btn-primary btn-block mt-3" type="submit">Iniciar</button>
+
+        <div class="mt-4">
+            <a href="{% url 'auth2:signup' %}">Nuevo usuario</a> -
+            <a href="{% url 'auth2:password_reset' %}">Restablecer contraseña</a><br>
+        </div>
+
+    </form>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+        $(function () {
+            var t = $('.toast');
+            t.toast({
+                delay: 3000
+            });
+            t.toast('show');
+        });
+    </script>
+{% endblock %}

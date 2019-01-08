@@ -1,0 +1,16 @@
+{% extends 'auth2/base.html' %}
+{% load staticfiles %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    {% if validlink %}
+        <h3 class="h3 mb-3 font-weight-normal">{{ title }}</h3>
+        <h4>Confirmación exitosa</h4>
+        <p>Ahora puede iniciar sesión dando clic en el siguiente enlace: </p>
+        <a class="btn btn-primary btn-block btn-flat" href="{% url 'auth2:login' %}">Iniciar sesión</a>
+    {% else %}
+        <h3 class="h3 mb-3 font-weight-normal">{{ title }}</h3>
+        <p>Esta liga se ha vencido favor volver a intentarlo</p>
+    {% endif %}
+{% endblock %}

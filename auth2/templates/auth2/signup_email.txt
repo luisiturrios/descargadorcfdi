@@ -1,0 +1,13 @@
+{% autoescape off %}Confirmación nuevo usuario {{ domain }}.
+
+Hey {{ user.first_name }}.
+
+Abre esta liga en tu navegador para confirmar su usuario.
+
+{{ protocol}}://{{ domain }}{% url 'auth2:signup_confirm' uidb64=uid token=token %}
+
+
+Su nombre de usuario, en caso de que haya olvidado: {{ user.get_username }}
+
+Bye.
+{% endautoescape %}

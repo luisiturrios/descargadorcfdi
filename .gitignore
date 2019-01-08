@@ -234,3 +234,6 @@ $RECYCLE.BIN/
 
 # Visual Studio Code
 .vscode/
+
+# Ignore Docker MariaDB Container data
+mariadb/

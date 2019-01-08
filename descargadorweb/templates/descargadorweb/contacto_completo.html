@@ -13,7 +13,11 @@
         </p>
 
         <p class="lead">
-            <a href="#" class="btn btn-lg btn-secondary">Descargar Ahora</a>
+            <a href="{% url 'auth2:signup' %}" class="btn btn-lg btn-secondary">Empezar Ahora</a>
+        </p>
+
+        <p class="lead">
+            <a href="{% url 'auth2:login' %}" class="">Ya tengo un usuario</a>
         </p>
     </main>
 {% endblock %}
