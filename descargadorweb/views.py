@@ -1,9 +1,11 @@
 from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import EmailMessage
 from django.urls import reverse_lazy
 from django.views import generic
 from django.conf import settings
 
+from . import models
 from . import forms
 
 
@@ -38,3 +40,25 @@ class ContactoView(generic.FormView):
 
 class ContactoCompletoView(generic.TemplateView):
     template_name = 'descargadorweb/contacto_completo.html'
+
+
+class EmpresasView(LoginRequiredMixin, generic.ListView):
+    template_name = 'descargadorweb/empresas.html'
+    model = models.Empresa
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(user=self.request.user, activo=True)
+        return queryset
+
+
+class EmpresasCrearView(generic.FormView):
+    template_name = 'descargadorweb/empresas_crear.html'
+    form_class = forms.EmpresasModelForm
+    success_url = reverse_lazy('descargadorweb:empresas')
+
+    def form_valid(self, form):
+        empresa = form.save(commit=False)
+        empresa.user = self.request.user
+        empresa.save()
+        return super().form_valid(form)

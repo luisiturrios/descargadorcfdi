@@ -47,10 +47,10 @@ DATABASES = {
         'NAME': 'descargador',
         'USER': 'user001',
         'PASSWORD': 'j2FvHyzkZ3FJwHJU',
-        'HOST': 'descargador-db',
+        'HOST': 'db',
         'PORT': '3306',
-        'CHARSET': 'utf-8',
-        'COLLATION': 'utf8_general_ci',
+        'CHARSET': 'utf8mb4',
+        'COLLATION': 'utf8mb4_unicode_ci',
     }
 }
 
@@ -94,7 +94,7 @@ TEMPLATES = [
 # AUTHENTICATION
 LOGIN_URL = 'auth2:login'
 
-LOGIN_REDIRECT_URL = 'cfdi:index'
+LOGIN_REDIRECT_URL = 'descargadorweb:empresas'
 
 LOGOUT_REDIRECT_URL = 'descargadorweb:index'
 
@@ -120,7 +120,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # CRISPY
-CELERY_BROKER_URL = 'redis://descargador-broker:6379/0'
+CELERY_BROKER_URL = 'redis://broker:6379/0'
 
 try:
     from local_settings import *

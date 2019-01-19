@@ -1,11 +1,10 @@
 version: '3.7'
 
 services:
-  descargador-db:
-    container_name: descargador-db
+  db:
     image: mariadb
     restart: on-failure
-    command: ['--character-set-server=utf8', '--collation-server=utf8_general_ci']
+    command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
     environment:
       MYSQL_USER: user001
       MYSQL_PASSWORD: j2FvHyzkZ3FJwHJU
@@ -14,33 +13,29 @@ services:
     volumes:
       - ${PWD}/mariadb:/var/lib/mysql
 
-  descargador-broker:
-    container_name: descargador-broker
+  broker:
     image: redis
     restart: on-failure
 
-  descargador-worker:
-    container_name: descargador-worker
+  worker:
     restart: on-failure
     build:
       context: .
       dockerfile: Dockerfile_Worker
     depends_on:
-      - descargador-db
-      - descargador-broker
+      - db
+      - broker
     volumes:
       - .:/var/www/descargador
 
-  descargador-web:
-    container_name: descargador-web
+  web:
     restart: on-failure
     build:
       context: .
       dockerfile: Dockerfile_Web
     depends_on:
-      - descargador-db
-      - descargador-broker
-      - descargador-worker
+      - db
+      - broker
     ports:
       - "8000:8000"
     volumes:

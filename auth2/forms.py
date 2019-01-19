@@ -27,6 +27,10 @@ class UserForm(forms.ModelForm):
         if get_user_model().objects.filter(email=email).exists():
             raise forms.ValidationError('Este correo ya se encuentra registrado')
 
+        self.instance.username = email
+
+        return email
+
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
@@ -35,7 +39,6 @@ class UserForm(forms.ModelForm):
                 'Los campos de contraseña no coinciden.',
                 code='password_mismatch',
             )
-        self.instance.username = self.cleaned_data.get('email')
         password_validation.validate_password(
             self.cleaned_data.get('password2'), self.instance)
         return password2

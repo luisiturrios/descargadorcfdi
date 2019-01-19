@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from . import models
+
+admin.site.register(models.Empresa)
+admin.site.register(models.SolicitudDeDescarga)
+admin.site.register(models.VerificacionSolicitudDeDescarga)
+admin.site.register(models.PaqueteDeDescarga)

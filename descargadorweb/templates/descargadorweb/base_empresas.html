@@ -1,0 +1,60 @@
+{% load staticfiles %}
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Descargador SAS de C.V.">
+    <meta name="generator" content="Django">
+    <title>Descargador {% block title %}{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{% static 'descargadorweb/img/descargador_logo.png' %}">
+    <link href="{% static 'descargadorweb/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+    <style type="text/css">
+        body {
+            padding-top: 5rem;
+        }
+        .invalid-feedback{
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="{% url 'descargadorweb:index' %}">Descargador</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'descargadorweb:empresas' %}">Empresas <span
+                        class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+        <ul class="navbar-nav my-2 my-lg-0">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true"
+                   aria-expanded="false" id="dropdown01">
+                    {{ user.get_full_name }}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdown01">
+                    <a class="dropdown-item" href="{% url 'auth2:logout' %}">Cerrar sesión</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<main role="main" class="container">
+    {% block main %}{% endblock %}
+</main>
+<script src="{% static 'descargadorweb/jquery/jquery-3.3.1.slim.min.js' %}"></script>
+<script src="{% static 'descargadorweb/popperjs/popper.min.js' %}"></script>
+<script src="{% static 'descargadorweb/bootstrap/js/bootstrap.min.js' %}"></script>
+</body>
+</html>
