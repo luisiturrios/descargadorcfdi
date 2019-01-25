@@ -7,39 +7,34 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    Empresas <a class="btn btn-sm btn-success float-right"
+                    Empresas <a class="btn btn-sm btn-secondary float-right"
                                 href="{% url 'descargadorweb:empresas_crear' %}">Agregar</a>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-12">
-                            <table class="table table-sm table-striped">
-                                <thead>
-                                <tr>
-                                    <th scope="col">RFC</th>
-                                    <th scope="col">Nombre</th>
-                                    <th scope="col">E.Firma</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for empresa in empresa_list %}
-                                    <tr>
-                                        <td><a href="#">{{ empresa.rfc }}</a></td>
-                                        <td>{{ empresa.nombre }}</td>
-                                        <td>{{ empresa.not_after }}</td>
-                                    </tr>
-                                {% empty %}
-                                    <tr>
-                                        <td><a class="btn btn-sm btn-block btn-success"
-                                               href="{% url 'descargadorweb:empresas_crear' %}">Agregar</a></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <table class="table table-sm table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">RFC</th>
+                            <th scope="col">Nombre</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for empresa in empresa_list %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'descargadorweb:empresas_detalle' pk=empresa.pk %}">{{ empresa.rfc }}</a>
+                                </td>
+                                <td>{{ empresa.nombre }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td><a class="btn btn-sm btn-block btn-secondary"
+                                       href="{% url 'descargadorweb:empresas_crear' %}">Agregar</a></td>
+                                <td></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

@@ -1,0 +1,59 @@
+{% extends 'descargadorweb/base_empresas.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Nueva solicitud{% endblock %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    Nueva solicitud de descarga para {{ empresa }}
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form | crispy }}
+                        <button type="reset" class="btn btn-secondary">Limpiar</button>
+                        <button type="submit" class="btn btn-success">Crear</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+        $(function () {
+            var fecha_inicial = $("#id_fecha_inicial");
+            var fecha_final = $("#id_fecha_final");
+
+
+            fecha_inicial.datepicker({
+                format: "dd/mm/yyyy",
+                startDate: "01/01/2014",
+                endDate: "now",
+                maxViewMode: 2,
+                todayBtn: true,
+                language: "es",
+                autoclose: true,
+                todayHighlight: true
+            });
+
+            fecha_final.datepicker({
+                format: "dd/mm/yyyy",
+                startDate: "01/01/2014",
+                endDate: "now",
+                maxViewMode: 2,
+                todayBtn: true,
+                language: "es",
+                autoclose: true,
+                todayHighlight: true,
+                orientation: "bottom auto"
+            });
+
+        });
+    </script>
+{% endblock %}

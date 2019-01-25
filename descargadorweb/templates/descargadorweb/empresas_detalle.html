@@ -1,0 +1,92 @@
+{% extends 'descargadorweb/base_empresas.html' %}
+
+{% load humanize %}
+
+{% block title %}{{ empresa.rfc }}{% endblock %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    Empresa {{ empresa.rfc }}
+                </div>
+                <div class="card-body">
+                    <p class="card-text"><strong>Empresa:</strong> {{ empresa }}</p>
+                    <p class="card-text"><strong>Vigencia E.Firma:</strong> {{ empresa.not_before | date:'d/m/Y' }}
+                        - {{ empresa.not_after | date:'d/m/Y' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card mt-4">
+                <div class="card-header">
+                    Solicitudes de descarga
+                    <a class="btn btn-sm btn-secondary float-right"
+                       href="{% url 'descargadorweb:solicitud_de_descarga_crear' empresa_pk=empresa.pk %}">Nueva</a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">ID Solicitud</th>
+                                <th scope="col">Fecha Inicial</th>
+                                <th scope="col">Fecha Final</th>
+                                <th scope="col">Tipo</th>
+                                <th scope="col">Tipo</th>
+                                <th scope="col">Estatus</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col">CFDIs</th>
+                                <th scope="col">Ultima verificación</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for solicitud in empresa.solicitudes.all %}
+                                <tr>
+                                    <td scope="col">
+                                        <a href="{% url 'descargadorweb:solicitud_de_descarga_detalle' empresa_pk=empresa.pk pk=solicitud.pk %}">
+                                            {{ solicitud.id_solicitud }}
+                                        </a>
+                                    </td>
+                                    <td scope="col">{{ solicitud.fecha_inicial | date:'d/m/Y' }}</td>
+                                    <td scope="col">{{ solicitud.fecha_final | date:'d/m/Y' }}</td>
+                                    <td scope="col">
+                                        {% if solicitud.rfc_emisor %}
+                                            Emitidos
+                                        {% endif %}
+                                        {% if solicitud.rfc_receptor %}
+                                            Recibidos
+                                        {% endif %}
+                                    </td>
+                                    <td scope="col">{{ solicitud.tipo_solicitud }}</td>
+                                    <td scope="col">{{ solicitud.cod_estatus }} - {{ solicitud.get_cod_estatus_display }}</td>
+                                    <td scope="col">{{ solicitud.estado_solicitud | default_if_none:'' }} - {{ solicitud.get_estado_solicitud_display | default_if_none:'' }}</td>
+                                    <td scope="col">{{ solicitud.numero_cfdis | default_if_none:'' }}</td>
+                                    <td scope="col">{{ solicitud.fecha_ultima_verificacion | naturaltime | default_if_none:'' }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td><a class="btn btn-sm btn-block btn-secondary"
+                                           href="{% url 'descargadorweb:solicitud_de_descarga_crear' empresa_pk=empresa.pk %}">Nueva</a>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

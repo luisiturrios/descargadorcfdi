@@ -12,7 +12,7 @@ class ContactoForm(forms.Form):
     mensaje = forms.CharField(widget=forms.Textarea(attrs={'rows': 4, }), required=True, label='Mensaje')
 
 
-class EmpresasModelForm(forms.ModelForm):
+class EmpresasForm(forms.ModelForm):
     cer = forms.FileField(widget=forms.FileInput(attrs={'accept': '.cer', }))
     key = forms.FileField(widget=forms.FileInput(attrs={'accept': '.key', }))
 
@@ -54,3 +54,22 @@ class EmpresasModelForm(forms.ModelForm):
             raise forms.ValidationError('Contraseña incorrecta')
 
         return self.cleaned_data['contrasena']
+
+
+class SolicitudDeDescargaForm(forms.Form):
+    fecha_inicial = forms.DateField(required=True, widget=forms.DateInput(attrs={'autocomplete': 'off'}))
+    fecha_final = forms.DateField(required=True, widget=forms.DateInput(attrs={'autocomplete': 'off'}))
+    tipo = forms.ChoiceField(required=True, choices=(('E', 'Emitidos'), ('R', 'Recibidos')))
+    tipo_solicitud = forms.ChoiceField(required=True, choices=models.TIPO_SOLICITUD)
+
+    def clean_fecha_final(self):
+        fecha_inicial = self.cleaned_data['fecha_inicial']
+        fecha_final = self.cleaned_data['fecha_final']
+
+        if fecha_final < fecha_inicial:
+            raise forms.ValidationError('La fecha final no puede ser menor que la fecha inicial')
+
+        if (fecha_final - fecha_inicial).days > 365:
+            raise forms.ValidationError('Solo puede descargar un año a la vez')
+
+        return fecha_final

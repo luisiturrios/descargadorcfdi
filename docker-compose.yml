@@ -19,9 +19,10 @@ services:
 
   worker:
     restart: on-failure
+    command: celery worker -A descargador -l info --concurrency=1
     build:
       context: .
-      dockerfile: Dockerfile_Worker
+      dockerfile: Dockerfile
     depends_on:
       - db
       - broker
@@ -30,9 +31,8 @@ services:
 
   web:
     restart: on-failure
-    build:
-      context: .
-      dockerfile: Dockerfile_Web
+    command: python manage.py runserver 0.0.0.0:8000
+    build: .
     depends_on:
       - db
       - broker

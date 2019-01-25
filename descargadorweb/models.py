@@ -54,7 +54,7 @@ def upload_to_paquete(instance, filename):
 
 
 class Empresa(models.Model):
-    user = models.ForeignKey(get_user_model(), null=False, blank=False, on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), related_name='empresas', null=False, blank=False, on_delete=models.CASCADE)
 
     rfc = models.CharField(max_length=13, unique=True, null=False, blank=False)
 
@@ -83,9 +83,12 @@ class Empresa(models.Model):
     def __str__(self):
         return '{} {}'.format(self.rfc, self.nombre)
 
+    class Meta:
+        ordering = ['-pk']
+
 
 class SolicitudDeDescarga(models.Model):
-    empresa = models.ForeignKey('descargadorweb.Empresa', null=False, blank=False, on_delete=models.CASCADE)
+    empresa = models.ForeignKey('descargadorweb.Empresa', related_name='solicitudes', null=False, blank=False, on_delete=models.CASCADE)
 
     id_solicitud = models.UUIDField(unique=True, null=False, blank=False)
 
@@ -103,7 +106,7 @@ class SolicitudDeDescarga(models.Model):
 
     mensaje = models.CharField(null=False, blank=False, max_length=50)
 
-    estado_solicitud = models.PositiveIntegerField(null=False, blank=False, choices=ESTADO_SOLICITUD)
+    estado_solicitud = models.PositiveIntegerField(null=True, blank=True, choices=ESTADO_SOLICITUD)
 
     numero_cfdis = models.PositiveIntegerField(null=True, blank=True, default=None)
 
@@ -115,10 +118,16 @@ class SolicitudDeDescarga(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_modificado = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return str(self.id_solicitud)
+
+    class Meta:
+        ordering = ['-pk']
+
 
 class VerificacionSolicitudDeDescarga(models.Model):
-    solicitud_de_descarga = models.ForeignKey('descargadorweb.SolicitudDeDescarga', null=False, blank=False,
-                                              on_delete=models.CASCADE)
+    solicitud_de_descarga = models.ForeignKey('descargadorweb.SolicitudDeDescarga', related_name='verificaciones',
+                                              null=False, blank=False, on_delete=models.CASCADE)
 
     fecha_verificacion = models.DateTimeField(null=True, blank=True, default=None)
 
@@ -137,10 +146,13 @@ class VerificacionSolicitudDeDescarga(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_modificado = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ['-pk']
+
 
 class PaqueteDeDescarga(models.Model):
-    solicitud_de_descarga = models.ForeignKey('descargadorweb.SolicitudDeDescarga', null=False, blank=False,
-                                              on_delete=models.CASCADE)
+    solicitud_de_descarga = models.ForeignKey('descargadorweb.SolicitudDeDescarga', related_name='paquetes', null=False,
+                                              blank=False, on_delete=models.CASCADE)
 
     id_paquete = models.CharField(max_length=40, unique=True, null=False, blank=False)
 
@@ -156,3 +168,6 @@ class PaqueteDeDescarga(models.Model):
     activo = models.BooleanField(default=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_modificado = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-pk']

@@ -1,0 +1,177 @@
+{% extends 'descargadorweb/base_empresas.html' %}
+
+{% load humanize %}
+{% load crispy_forms_tags %}
+
+{% block title %}Solicitud{% endblock %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    Solicitud de descarga {{ solicitud.id_solicitud }}
+                    <a href="{% url 'descargadorweb:empresas_detalle' pk=empresa.pk %}"
+                       class="btn btn-sm btn-secondary float-right">Empresa</a>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label class="col-form-label-sm">Empresa</label>
+                                <input type="text" class="form-control form-control-sm" disabled value="{{ empresa }}">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="col-form-label-sm">ID solicitud</label>
+                                <input type="text" class="form-control form-control-sm" disabled
+                                       value="{{ solicitud.id_solicitud }}">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="col-form-label-sm">Fecha inicial</label>
+                                <input type="text" class="form-control form-control-sm" disabled
+                                       value="{{ solicitud.fecha_inicial | date:'d/m/Y' }}">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="col-form-label-sm">Fecha final</label>
+                                <input type="text" class="form-control form-control-sm" disabled
+                                       value="{{ solicitud.fecha_final | date:'d/m/Y' }}">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="col-form-label-sm">Tipo</label>
+                                <input type="text" class="form-control form-control-sm" disabled
+                                       value="{{ solicitud.tipo_solicitud }}">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            {% if solicitud.rfc_receptor != None %}
+                                <div class="form-group col-md-2">
+                                    <label class="col-form-label-sm">RFC receptor</label>
+                                    <input type="text" class="form-control form-control-sm" disabled
+                                           value="{{ solicitud.rfc_receptor }}">
+                                </div>
+                            {% endif %}
+                            {% if solicitud.rfc_emisor != None %}
+                                <div class="form-group col-md-2">
+                                    <label class="col-form-label-sm">RFC emisor</label>
+                                    <input type="text" class="form-control form-control-sm" disabled
+                                           value="{{ solicitud.rfc_emisor }}">
+                                </div>
+                            {% endif %}
+                            <div class="form-group col-md-3">
+                                <label class="col-form-label-sm">Estatus</label>
+                                <input type="text" class="form-control form-control-sm" disabled
+                                       value="{{ solicitud.cod_estatus }} - {{ solicitud.get_cod_estatus_display }}">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="col-form-label-sm">Estado solicitud</label>
+                                <input type="text" class="form-control form-control-sm" disabled
+                                       value="{{ solicitud.estado_solicitud | default_if_none:'' }} - {{ solicitud.get_estado_solicitud_display | default_if_none:'' }}">
+                            </div>
+                            <div class="form-group col-md-1">
+                                <label class="col-form-label-sm">CFDIs</label>
+                                <input type="text" class="form-control form-control-sm" disabled
+                                       value="{{ solicitud.numero_cfdis | default_if_none:'' }}">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="col-form-label-sm">Ultima verificación</label>
+                                <input type="text" class="form-control form-control-sm" disabled
+                                       value="{{ solicitud.fecha_ultima_verificacion | naturaltime | default_if_none:'' }}">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="col-form-label-sm">Resolución</label>
+                                <input type="text" class="form-control form-control-sm" disabled
+                                       value="{{ solicitud.fecha_resolucion | naturaltime | default_if_none:'' }}">
+                            </div>
+                        </div>
+                    </form>
+                    <p class="card-text text-sm-center">Fecha de creación: {{ solicitud.fecha_creacion }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    Verificaciones
+                    {% if not solicitud.estado_solicitud or solicitud.estado_solicitud < 3 %}
+                        <a href="{% url 'descargadorweb:solicitud_de_descarga_verificar' empresa_pk=empresa.pk pk=solicitud.pk %}"
+                           class="btn btn-sm btn-secondary float-right">Verificar</a>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">Verificación</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col">CFDIs</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for verificacion in solicitud.verificaciones.all %}
+                                <tr>
+                                    <td scope="col">{{ verificacion.fecha_verificacion | naturaltime }}</td>
+                                    <td scope="col">{{ solicitud.estado_solicitud }}
+                                        - {{ solicitud.get_estado_solicitud_display }}</td>
+                                    <td scope="col">{{ verificacion.numero_cfdis }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td>.</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    Paquetes ZIP
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">fecha_descarga</th>
+                                <th scope="col">id_paquete</th>
+                                <th scope="col">...</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for paquete in solictud.paquetes.all %}
+                                <tr>
+                                    <td>{{ paquete.fecha_descarga }}</td>
+                                    <td>{{ paquete.id_paquete }}</td>
+                                    <td><a class="btn btn-sm btn-secondary">Descargar</a></td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td>.</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-center">
+            <p>Fecha de actualización de esta pagina {% now "j F Y h:i" %}</p>
+        </div>
+    </div>
+{% endblock %}

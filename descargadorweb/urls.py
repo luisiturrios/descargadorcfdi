@@ -12,4 +12,20 @@ urlpatterns = [
 
     path('empresas/', views.EmpresasView.as_view(), name='empresas'),
     path('empresas/crear/', views.EmpresasCrearView.as_view(), name='empresas_crear'),
+    path('empresas/<int:pk>/', views.EmpresasDetalleView.as_view(), name='empresas_detalle'),
+    path(
+        'empresas/<int:empresa_pk>/solicitud-descarga/crear/',
+        views.SolicitudDeDescargaCrearView.as_view(),
+        name='solicitud_de_descarga_crear'
+    ),
+    path(
+        'empresas/<int:empresa_pk>/solicitud-descarga/<int:pk>/',
+        views.SolicitudDeDescargaDetalleView.as_view(),
+        name='solicitud_de_descarga_detalle'
+    ),
+    path(
+        'empresas/<int:empresa_pk>/solicitud-descarga/<int:pk>/verificar/',
+        views.SolicitudDeDescargaVerificarView.as_view(),
+        name='solicitud_de_descarga_verificar'
+    ),
 ]
