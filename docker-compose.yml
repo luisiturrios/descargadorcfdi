@@ -28,7 +28,17 @@ services:
       - broker
     volumes:
       - .:/var/www/descargador
-
+  beat:
+    restart: on-failure
+    command: celery beat -A descargador -l info --pidfile=/opt/celeryd.pid --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+      - broker
+    volumes:
+      - .:/var/www/descargador
   web:
     restart: on-failure
     command: python manage.py runserver 0.0.0.0:8000

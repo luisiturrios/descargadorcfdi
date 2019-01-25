@@ -237,3 +237,6 @@ $RECYCLE.BIN/
 
 # Ignore Docker MariaDB Container data
 mariadb/
+
+# Celery
+celerybeat.pid

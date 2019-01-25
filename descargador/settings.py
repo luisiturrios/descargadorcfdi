@@ -26,6 +26,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django_celery_results',
+    'django_celery_beat',
     'crispy_forms',
     'auth2',
     'descargadorweb',
@@ -121,8 +123,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # CRISPY
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-# CRISPY
+# CELERY
 CELERY_BROKER_URL = 'redis://broker:6379/0'
+CELERY_RESULT_BACKEND = 'django-db'
 
 try:
     from local_settings import *
