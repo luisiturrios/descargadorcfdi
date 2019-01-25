@@ -54,7 +54,8 @@ def upload_to_paquete(instance, filename):
 
 
 class Empresa(models.Model):
-    user = models.ForeignKey(get_user_model(), related_name='empresas', null=False, blank=False, on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), related_name='empresas', null=False, blank=False,
+                             on_delete=models.CASCADE)
 
     rfc = models.CharField(max_length=13, unique=True, null=False, blank=False)
 
@@ -88,7 +89,8 @@ class Empresa(models.Model):
 
 
 class SolicitudDeDescarga(models.Model):
-    empresa = models.ForeignKey('descargadorweb.Empresa', related_name='solicitudes', null=False, blank=False, on_delete=models.CASCADE)
+    empresa = models.ForeignKey('descargadorweb.Empresa', related_name='solicitudes', null=False, blank=False,
+                                on_delete=models.CASCADE)
 
     id_solicitud = models.UUIDField(unique=True, null=False, blank=False)
 
@@ -146,6 +148,9 @@ class VerificacionSolicitudDeDescarga(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_modificado = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return '{} - {}'.format(self.solicitud_de_descarga.id_solicitud, self.fecha_verificacion)
+
     class Meta:
         ordering = ['-pk']
 
@@ -156,11 +161,11 @@ class PaqueteDeDescarga(models.Model):
 
     id_paquete = models.CharField(max_length=40, unique=True, null=False, blank=False)
 
-    cod_estatus = models.PositiveIntegerField(null=False, blank=False, choices=COD_ESTATUS)
+    cod_estatus = models.PositiveIntegerField(null=True, blank=True, choices=COD_ESTATUS)
 
     mensaje = models.CharField(null=False, blank=False, max_length=50)
 
-    paquete = models.FileField(null=True, blank=True, upload_to=upload_to_paquete)
+    paqueteb64 = models.TextField(null=True, blank=True)
 
     fecha_descarga = models.DateTimeField(null=True, blank=True, default=None)
 
@@ -168,6 +173,9 @@ class PaqueteDeDescarga(models.Model):
     activo = models.BooleanField(default=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_modificado = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.id_paquete)
 
     class Meta:
         ordering = ['-pk']

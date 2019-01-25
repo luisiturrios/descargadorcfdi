@@ -113,8 +113,8 @@
                             {% for verificacion in solicitud.verificaciones.all %}
                                 <tr>
                                     <td scope="col">{{ verificacion.fecha_verificacion | naturaltime }}</td>
-                                    <td scope="col">{{ solicitud.estado_solicitud }}
-                                        - {{ solicitud.get_estado_solicitud_display }}</td>
+                                    <td scope="col">{{ verificacion.estado_solicitud }}
+                                        - {{ verificacion.get_estado_solicitud_display }}</td>
                                     <td scope="col">{{ verificacion.numero_cfdis }}</td>
                                 </tr>
                             {% empty %}
@@ -149,11 +149,11 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for paquete in solictud.paquetes.all %}
+                            {% for paquete in solicitud.paquetes.all %}
                                 <tr>
-                                    <td>{{ paquete.fecha_descarga }}</td>
+                                    <td>{{ paquete.fecha_descarga | default_if_none:"" }}</td>
                                     <td>{{ paquete.id_paquete }}</td>
-                                    <td><a class="btn btn-sm btn-secondary">Descargar</a></td>
+                                    <td><a class="btn btn-sm btn-secondary" href="{% url 'descargadorweb:paquete_de_descarga_descargar' empresa_pk=empresa.pk pk=paquete.pk %}">Descargar</a></td>
                                 </tr>
                             {% empty %}
                                 <tr>

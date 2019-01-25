@@ -1,6 +1,8 @@
 from datetime import datetime
+import base64
 
 from django.contrib.sites.shortcuts import get_current_site
+from django.http import HttpResponseForbidden, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.core.mail import EmailMessage
@@ -8,17 +10,16 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.shortcuts import render
 from django.contrib import messages
-from django.utils import timezone
 from django.conf import settings
 from django.views import generic
 from django.views import View
 
-from cfdiclient import VerificaSolicitudDescarga
 from cfdiclient import SolicitaDescarga
 from cfdiclient import Autenticacion
 from cfdiclient import Fiel
 
 from . import models
+from . import tasks
 from . import forms
 
 
@@ -187,58 +188,28 @@ class SolicitudDeDescargaVerificarView(LoginRequiredMixin, View):
             messages.error(request, 'Solicitud ya verificada')
             return redirect('descargadorweb:solicitud_de_descarga_detalle', empresa_pk=empresa.pk, pk=solicitud.pk)
 
-        cer_der = empresa.cer.read()
-        key_der = empresa.key.read()
+        tasks.verificar_solicitud_descarga(solicitud.pk)
 
-        fiel = Fiel(cer_der, key_der, empresa.contrasena)
-
-        auth = Autenticacion(fiel)
-
-        token = auth.obtener_token()
-
-        verificador = VerificaSolicitudDescarga(fiel)
-
-        result = verificador.verificar_descarga(token, empresa.rfc, str(solicitud.id_solicitud))
-
-        print(result)
-
-        verificacion = models.VerificacionSolicitudDeDescarga()
-
-        verificacion.solicitud_de_descarga = solicitud
-
-        verificacion.fecha_verificacion = timezone.now()
-
-        verificacion.cod_estatus = int(result['cod_estatus'])
-
-        verificacion.mensaje = result['mensaje']
-
-        verificacion.cod_estatus_solicitud = int(result['codigo_estado_solicitud'])
-
-        verificacion.estado_solicitud = int(result['estado_solicitud'])
-
-        verificacion.numero_cfdis = int(result['numero_cfdis'])
-
-        solicitud.cod_estatus = verificacion.cod_estatus_solicitud
-
-        solicitud.estado_solicitud = verificacion.estado_solicitud
-
-        solicitud.fecha_ultima_verificacion = verificacion.fecha_verificacion
-
-        solicitud.numero_cfdis = verificacion.numero_cfdis
-
-        if solicitud.estado_solicitud == 3:
-            solicitud.fecha_resolucion = verificacion.fecha_verificacion
-
-            for paq in result['paquetes']:
-                paquete = models.PaqueteDeDescarga()
-                paquete.solicitud_de_descarga = solicitud
-                paquete.id_paquete = paq
-                paquete.save()
-
-        verificacion.save()
-
-        solicitud.save()
-
-        messages.info(request, 'Verificación exitosa')
+        messages.info(request, 'Verificación programada')
 
         return redirect('descargadorweb:solicitud_de_descarga_detalle', empresa_pk=empresa.pk, pk=solicitud.pk)
+
+
+class PaqueteDeDescargaDescargar(View):
+    def get(self, request, empresa_pk, pk):
+        empresa = get_object_or_404(models.Empresa, pk=empresa_pk, user=request.user, activo=True)
+
+        paquete = get_object_or_404(models.PaqueteDeDescarga, pk=pk, activo=True)
+
+        if paquete.solicitud_de_descarga.empresa_id != empresa.id:
+            return HttpResponseForbidden()
+
+        if paquete.fecha_descarga is None:
+            messages.info(request, 'Espere unos segundos a que nuestro sistema descarge su paquete')
+
+            return redirect('descargadorweb:solicitud_de_descarga_detalle', empresa_pk=empresa.pk,
+                            pk=paquete.solicitud_de_descarga.pk)
+
+        response = HttpResponse(base64.b64decode(paquete.paqueteb64), content_type='application/zip')
+        response['Content-Disposition'] = 'attachment; filename={}.zip'.format(paquete.id_paquete)
+        return response

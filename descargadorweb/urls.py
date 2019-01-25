@@ -28,4 +28,10 @@ urlpatterns = [
         views.SolicitudDeDescargaVerificarView.as_view(),
         name='solicitud_de_descarga_verificar'
     ),
+    path(
+        'empresas/<int:empresa_pk>/paquete-de-descarga/<int:pk>/descargar/',
+        views.PaqueteDeDescargaDescargar.as_view(),
+        name='paquete_de_descarga_descargar'
+    ),
+
 ]
