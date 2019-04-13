@@ -10,7 +10,9 @@ DEBUG = True
 
 SECRET_KEY = 'vac64ha47f__kfepydv(m18q1%!#5zfw7*(=ss4*r6$ty)6_x5'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'descargador.k8shub.tk'
+]
 
 ROOT_URLCONF = 'descargador.urls'
 
