@@ -8,4 +8,4 @@ django-celery-beat==1.4.0
 pycryptodome==3.7.2
 pyOpenSSL==18.0.0
 python-dateutil==2.7.5
-cfdiclient==1.0.4
+cfdiclient==1.1.0
