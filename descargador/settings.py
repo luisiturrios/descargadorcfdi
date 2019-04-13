@@ -11,7 +11,7 @@ DEBUG = True
 SECRET_KEY = 'vac64ha47f__kfepydv(m18q1%!#5zfw7*(=ss4*r6$ty)6_x5'
 
 ALLOWED_HOSTS = [
-    'descargador.k8shub.tk'
+    '*'
 ]
 
 ROOT_URLCONF = 'descargador.urls'
@@ -28,8 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'django_celery_results',
-    'django_celery_beat',
+    'django_celery_results',    
     'crispy_forms',
     'auth2',
     'descargadorweb',

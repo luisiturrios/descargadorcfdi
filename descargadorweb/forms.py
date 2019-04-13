@@ -18,7 +18,7 @@ class EmpresasForm(forms.ModelForm):
 
     class Meta:
         model = models.Empresa
-        fields = ['cer', 'key', 'contrasena']
+        fields = ['cer', 'key', 'contrasena']        
 
     def clean_cer(self):
         cer_file = self.cleaned_data['cer'].read()
@@ -28,9 +28,14 @@ class EmpresasForm(forms.ModelForm):
         subject = cer.get_subject()
 
         if subject.x500UniqueIdentifier is None:
-            raise forms.ValidationError(u'Este no es una E.firma valida')
+            raise forms.ValidationError(u'Este no es una E.firma valida')        
 
-        self.instance.rfc = subject.x500UniqueIdentifier.strip().upper()
+        rfc = subject.x500UniqueIdentifier.strip().upper()
+
+        if len(rfc) > 13:
+            rfc = rfc[:13].strip()
+
+        self.instance.rfc = rfc
 
         if models.Empresa.objects.filter(rfc=self.instance.rfc).exists():
             raise forms.ValidationError(u'Empresa ya registrada')
