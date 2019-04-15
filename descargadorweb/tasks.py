@@ -1,11 +1,13 @@
-import b64
+import base64
+
 from celery.utils.log import get_task_logger
 from cfdiclient import (Autenticacion, DescargaMasiva, Fiel,
                         VerificaSolicitudDescarga)
-from descargador import celery_app
-from descargadorweb import models
 from django.core.files.base import ContentFile
 from django.utils import timezone
+
+from descargador import celery_app
+from descargadorweb import models
 
 logger = get_task_logger(__name__)
 
