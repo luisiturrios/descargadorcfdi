@@ -94,7 +94,7 @@ def descargar_paquete(self, pk):
     paquete.mensaje = result['mensaje']
 
     if int(result['cod_estatus']) == 5000:
-        paquete.paqueteb64.save('{}.zip'.format(paquete.id_paquete), base64.b64decode(result['paquete_b64']), save=True)
+        paquete.paqueteb64 = ContentFile(base64.b64decode(result['paquete_b64']))
         paquete.fecha_descarga = timezone.now()
 
     paquete.save()
