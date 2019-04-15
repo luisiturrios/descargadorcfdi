@@ -1,13 +1,11 @@
-from django.utils import timezone
-
+import b64
 from celery.utils.log import get_task_logger
-from cfdiclient import VerificaSolicitudDescarga
-from cfdiclient import DescargaMasiva
-from cfdiclient import Autenticacion
-from cfdiclient import Fiel
-
+from cfdiclient import (Autenticacion, DescargaMasiva, Fiel,
+                        VerificaSolicitudDescarga)
 from descargador import celery_app
 from descargadorweb import models
+from django.core.files.base import ContentFile
+from django.utils import timezone
 
 logger = get_task_logger(__name__)
 
@@ -94,7 +92,7 @@ def descargar_paquete(self, pk):
     paquete.mensaje = result['mensaje']
 
     if int(result['cod_estatus']) == 5000:
-        paquete.paqueteb64 = result['paquete_b64']
+        paquete.paqueteb64.save('{}.zip'.format(paquete.id_paquete), base64.b64decode(result['paquete_b64']), save=True)
         paquete.fecha_descarga = timezone.now()
 
     paquete.save()

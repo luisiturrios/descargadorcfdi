@@ -210,6 +210,6 @@ class PaqueteDeDescargaDescargar(View):
             return redirect('descargadorweb:solicitud_de_descarga_detalle', empresa_pk=empresa.pk,
                             pk=paquete.solicitud_de_descarga.pk)
 
-        response = HttpResponse(base64.b64decode(paquete.paqueteb64), content_type='application/zip')
+        response = HttpResponse(paquete.paqueteb64.read(), content_type='application/zip')
         response['Content-Disposition'] = 'attachment; filename={}.zip'.format(paquete.id_paquete)
         return response

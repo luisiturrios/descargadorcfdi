@@ -48,7 +48,7 @@ def upload_to_efirma(instance, filename):
 def upload_to_paquete(instance, filename):
     path, ext = os.path.splitext(filename)
     return 'PaqueteDeDescarga/{}{}'.format(
-        uuid.uuid4(),
+        instance.id_paquete,
         ext
     )
 
@@ -163,9 +163,9 @@ class PaqueteDeDescarga(models.Model):
 
     cod_estatus = models.PositiveIntegerField(null=True, blank=True, choices=COD_ESTATUS)
 
-    mensaje = models.CharField(null=False, blank=False, max_length=50)
+    mensaje = models.CharField(null=False, blank=False, max_length=50)    
 
-    paqueteb64 = models.TextField(null=True, blank=True)
+    paqueteb64 = models.FileField(null=True, blank=True, upload_to=upload_to_paquete)
 
     fecha_descarga = models.DateTimeField(null=True, blank=True, default=None)
 

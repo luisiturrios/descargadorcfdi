@@ -12,11 +12,9 @@ services:
       MYSQL_ROOT_PASSWORD: j2FvHyzkZ3FJwHJU
     volumes:
       - ./mariadb:/var/lib/mysql
-
   broker:
     image: redis
     restart: on-failure
-
   worker:
     restart: on-failure
     command: celery worker -A descargador -l info --concurrency=1
