@@ -6,7 +6,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # APP CONFIG
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 SECRET_KEY = 'vac64ha47f__kfepydv(m18q1%!#5zfw7*(=ss4*r6$ty)6_x5'
 
@@ -28,7 +28,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'django_celery_results',    
+    'django_celery_results',
+    'django_celery_beat',
     'crispy_forms',
     'auth2',
     'descargadorweb',
@@ -49,7 +50,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'descargador',
-        'USER': 'user001',
+        'USER': 'root',
         'PASSWORD': 'j2FvHyzkZ3FJwHJU',
         'HOST': 'db',
         'PORT': '3306',
@@ -78,7 +79,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 TEMPLATES = [
     {
@@ -128,7 +129,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 CELERY_BROKER_URL = 'redis://broker:6379/0'
 CELERY_RESULT_BACKEND = 'django-db'
 
-try:
-    from local_settings import *
-except ImportError:
-    pass
+if not DEBUG:
+    try:
+        from .production_settings import *
+    except ImportError:
+        pass

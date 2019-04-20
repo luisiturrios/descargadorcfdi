@@ -21,7 +21,7 @@ def send_user_activation_email(user_pk, protocol, domain):
 
     token = default_token_generator.make_token(user)
 
-    uid = urlsafe_base64_encode(force_bytes(user.pk)).decode()
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
 
     context = {
         'user': user,

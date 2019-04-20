@@ -1,11 +1,13 @@
-FROM python:3
+FROM python:3.7.3
+
+WORKDIR /usr/src/app
 
 ENV PYTHONUNBUFFERED 1
 
-RUN mkdir -p /var/www/descargador
-
-WORKDIR /var/www/descargador
-
 COPY requirements.txt requirements.txt
 
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt uwsgi
+
+COPY . .
+
+EXPOSE 8000
