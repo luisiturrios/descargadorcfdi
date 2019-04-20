@@ -65,5 +65,5 @@ services:
     depends_on:
       - web
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./staticfiles:/usr/share/nginx/descargador    
+      - ./nginx.conf:/etc/nginx/conf.d/descargador.conf
+      - ./staticfiles:/usr/share/nginx/descargador
