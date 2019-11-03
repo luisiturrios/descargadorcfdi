@@ -1,9 +1,9 @@
 # EMAIL
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'in-v3.mailjet.com'
+EMAIL_HOST = 'smtp.mailgun.org'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = '72ade4783c742f973977a93fb9cb7ed8'
-EMAIL_HOST_PASSWORD = '1e0238fbbac66a40ab34714a8a697728'
+EMAIL_HOST_USER = 'postmaster@descargadorcfdi.com'
+EMAIL_HOST_PASSWORD = '1741a27fe11bac89011a0787a42fb230-816b23ef-2f775d4a'
 EMAIL_USE_TLS = True
 
 DEFAULT_FROM_EMAIL = 'Descargador CFDI<no-reply@descargadorcfdi.com>'
