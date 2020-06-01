@@ -159,7 +159,7 @@ class PaqueteDeDescarga(models.Model):
     solicitud_de_descarga = models.ForeignKey('descargadorweb.SolicitudDeDescarga', related_name='paquetes', null=False,
                                               blank=False, on_delete=models.CASCADE)
 
-    id_paquete = models.CharField(max_length=40, unique=True, null=False, blank=False)
+    id_paquete = models.CharField(max_length=100, unique=True, null=False, blank=False)
 
     cod_estatus = models.PositiveIntegerField(null=True, blank=True, choices=COD_ESTATUS)
 
