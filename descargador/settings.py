@@ -6,13 +6,11 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # APP CONFIG
-DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+DEBUG = True
 
 SECRET_KEY = 'vac64ha47f__kfepydv(m18q1%!#5zfw7*(=ss4*r6$ty)6_x5'
 
-ALLOWED_HOSTS = [
-    '*'
-]
+ALLOWED_HOSTS = []
 
 ROOT_URLCONF = 'descargador.urls'
 
@@ -48,14 +46,8 @@ MIDDLEWARE = [
 # DATABASE
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'descargador',
-        'USER': 'root',
-        'PASSWORD': 'j2FvHyzkZ3FJwHJU',
-        'HOST': 'db',
-        'PORT': '3306',
-        'CHARSET': 'utf8mb4',
-        'COLLATION': 'utf8mb4_unicode_ci',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -129,8 +121,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 CELERY_BROKER_URL = 'redis://broker:6379/0'
 CELERY_RESULT_BACKEND = 'django-db'
 
-if not DEBUG:
-    try:
-        from .production_settings import *
-    except ImportError:
-        pass
+try:
+    from .local_settings import *
+except ImportError:
+    pass
