@@ -47,7 +47,7 @@ class ContactoView(generic.FormView):
             bcc=settings.ADMINS,
         )
 
-        email.send()
+        # email.send()
 
         return super().form_valid(form)
 

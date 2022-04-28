@@ -11,8 +11,6 @@
     <main role="main" class="inner cover">
         <p class="lead pt-4">Deja un mensaje, responderemos lo antes posible</p>
         <form method="post">
-            {% csrf_token %}
-            {{ form | crispy }}
             <button type="submit" class="btn btn-primary">Enviar</button>
         </form>
     </main>
